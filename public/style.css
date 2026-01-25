@@ -207,13 +207,38 @@ header p {
 .common-game-chip {
     background-color: #0e0e0e;
     border: 1px solid var(--primary-green);
-    padding: 8px 16px;
+    padding: 8px 12px 8px 16px;
     border-radius: 50px;
     font-weight: 600;
     font-size: 0.85rem;
     display: flex;
     align-items: center;
     gap: 8px;
+    transition: background 0.2s;
+}
+
+.common-game-chip:hover {
+    background-color: rgba(34, 197, 94, 0.1);
+}
+
+.btn-remove-common {
+    background: none;
+    border: none;
+    color: #ef4444;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 4px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    opacity: 0.7;
+}
+
+.btn-remove-common:hover {
+    opacity: 1;
+    background-color: rgba(239, 68, 68, 0.1);
 }
 
 .btn-dashed {
@@ -244,6 +269,8 @@ header p {
     border-radius: 50px;
     cursor: pointer;
     transition: 0.2s;
+    width: 100%;
+    max-width: 350px;
 }
 
 .btn-primary:disabled {
@@ -264,6 +291,12 @@ header p {
     text-align: center;
 }
 
+.action-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
 .modal {
     display: none;
     position: fixed;
@@ -274,6 +307,7 @@ header p {
     z-index: 100;
     justify-content: center;
     align-items: center;
+    padding: 20px;
 }
 
 .modal-backdrop {
@@ -288,7 +322,7 @@ header p {
     background-color: #0e0e0e;
     padding: 40px;
     border-radius: 24px;
-    width: 90%;
+    width: 100%;
     max-width: 450px;
     position: relative;
     text-align: center;
@@ -316,9 +350,10 @@ header p {
 }
 
 .game-reveal h2 {
-    font-size: 2.2rem;
+    font-size: 2rem;
     color: var(--primary-green);
     margin: 20px 0;
+    word-wrap: break-word;
 }
 
 .icon-box {
@@ -377,4 +412,50 @@ header p {
 }
 @keyframes fall {
     to { transform: translateY(600px) rotate(720deg); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 40px 15px;
+    }
+
+    .logo {
+        font-size: 2rem;
+    }
+
+    .input-group {
+        flex-direction: column;
+        padding: 15px;
+        border-radius: 20px;
+        gap: 10px;
+    }
+
+    .input-group i {
+        display: none;
+    }
+
+    .input-group input {
+        width: 100%;
+        text-align: center;
+        padding: 5px 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        margin-bottom: 5px;
+    }
+
+    .input-group button {
+        width: 100%;
+    }
+
+    .user-card {
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .common-games-section {
+        padding: 20px;
+    }
+    
+    .modal-card {
+        padding: 30px 20px;
+    }
 }

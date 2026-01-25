@@ -54,6 +54,11 @@ window.removeUser = function(id) {
     updateCommonGames();
 }
 
+window.removeCommonGame = function(gameToRemove) {
+    commonGames = commonGames.filter(game => game !== gameToRemove);
+    renderCommonGames();
+}
+
 function generateRandomGames() {
     const shuffled = [...possibleGames].sort(() => 0.5 - Math.random());
     const count = Math.floor(Math.random() * 6) + 5; 
@@ -103,7 +108,21 @@ function renderCommonGames() {
         commonGames.forEach(game => {
             const chip = document.createElement('div');
             chip.className = 'common-game-chip';
-            chip.innerHTML = `<i class="fa-solid fa-gamepad"></i> ${game}`;
+            
+            const icon = document.createElement('i');
+            icon.className = 'fa-solid fa-gamepad';
+            
+            const textNode = document.createTextNode(' ' + game + ' ');
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'btn-remove-common';
+            removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+            removeBtn.onclick = () => removeCommonGame(game);
+
+            chip.appendChild(icon);
+            chip.appendChild(textNode);
+            chip.appendChild(removeBtn);
+
             commonGamesList.appendChild(chip);
         });
     } else {
