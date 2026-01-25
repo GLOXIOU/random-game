@@ -1,0 +1,25 @@
+{
+  "name": "random-steam-game",
+  "version": "1.0.0",
+  "description": "**Struggling to choose a game to play with your friends every night?**  \r Stop arguing, stop scrolling — let the randomness decide for you.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GLOXIOU/random-steam-game.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/GLOXIOU/random-steam-game/issues"
+  },
+  "homepage": "https://github.com/GLOXIOU/random-steam-game#readme",
+  "dependencies": {
+    "express": "^4.18.4"
+  }
+}
