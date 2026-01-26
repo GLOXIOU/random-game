@@ -18,6 +18,19 @@ const randomizeBtn = document.getElementById('randomizeBtn');
 const resultModal = document.getElementById('resultModal');
 const winnerText = document.getElementById('winnerText');
 const closeModal = document.getElementById('closeModal');
+const currentPlatform = document.getElementById('currentPlatform');
+const platformMenu = document.getElementById('platformMenu');
+
+currentPlatform.addEventListener('click', (e) => {
+    e.stopPropagation();
+    platformMenu.classList.toggle('show');
+});
+
+document.addEventListener('click', (e) => {
+    if (!platformMenu.contains(e.target) && !currentPlatform.contains(e.target)) {
+        platformMenu.classList.remove('show');
+    }
+});
 
 addUserBtn.addEventListener('click', () => {
     const username = usernameInput.value.trim();
@@ -127,12 +140,12 @@ function renderCommonGames() {
         });
     } else {
         randomizeBtn.disabled = true;
-        commonGamesList.innerHTML = '<div class="empty-state">Aucun jeu en commun...</div>';
+        commonGamesList.innerHTML = '<div class="empty-state">No common games...</div>';
     }
 }
 
 addManualGameBtn.addEventListener('click', () => {
-    const manualGame = prompt("Nom du jeu à ajouter :");
+    const manualGame = prompt("Name of the game to add:");
     if (manualGame) {
         if (!commonGames.includes(manualGame)) {
             commonGames.push(manualGame);
@@ -159,7 +172,7 @@ randomizeBtn.addEventListener('click', () => {
         });
 
         randomizeBtn.disabled = false;
-        randomizeBtn.innerHTML = '<i class="fa-solid fa-dice"></i> TROUVER UN JEU';
+        randomizeBtn.innerHTML = '<i class="fa-solid fa-dice"></i> FIND A GAME';
     }, 1000);
 });
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,13 +13,32 @@
     <div class="main-container">
         <header>
             <div class="logo">RANDOM GAME</div>
-            <p>Comparez vos bibliothèques et jouez ensemble.</p>
+            <p>Compare your libraries and play together.</p>
         </header>
 
         <section class="input-section">
             <div class="input-group">
-                <i class="fa-brands fa-steam"></i>
-                <input type="text" id="usernameInput" placeholder="Pseudo Steam..." autocomplete="off">
+                <div class="platform-selector">
+                    <div id="currentPlatform">
+                        <i class="fa-brands fa-steam"></i>
+                        <i class="fa-solid fa-chevron-down dropdown-arrow"></i>
+                    </div>
+                    <div id="platformMenu" class="platform-menu">
+                        <div class="platform-item active" data-platform="steam">
+                            <i class="fa-brands fa-steam"></i> Steam
+                        </div>
+                        <div class="platform-item disabled">
+                            <i class="fa-brands fa-xbox"></i> Xbox (Soon)
+                        </div>
+                        <div class="platform-item disabled">
+                            <i class="fa-brands fa-playstation"></i> PlayStation (Soon)
+                        </div>
+                        <div class="platform-item disabled">
+                            <i class="fa-solid fa-gamepad"></i> Epic Games (Soon)
+                        </div>
+                    </div>
+                </div>
+                <input type="text" id="usernameInput" placeholder="Steam Username..." autocomplete="off">
                 <button id="addUserBtn">OK</button>
             </div>
         </section>
@@ -28,23 +47,23 @@
 
         <section class="common-games-section">
             <div class="section-header">
-                <h2><i class="fa-solid fa-layer-group"></i> Jeux en commun</h2>
+                <h2><i class="fa-solid fa-layer-group"></i> Common Games</h2>
                 <span id="commonCount" class="badge">0</span>
             </div>
             
             <div class="common-games-wrapper">
                 <div id="commonGamesList" class="games-list">
-                    <div class="empty-state">Ajoutez des joueurs pour voir les jeux communs...</div>
+                    <div class="empty-state">Add players to see common games...</div>
                 </div>
                 <button id="addManualGameBtn" class="btn-dashed">
-                    <i class="fa-solid fa-plus"></i> Ajouter un jeu externe
+                    <i class="fa-solid fa-plus"></i> Add External Game
                 </button>
             </div>
         </section>
 
         <section class="action-section">
             <button id="randomizeBtn" class="btn-primary" disabled>
-                <i class="fa-solid fa-dice"></i> TROUVER UN JEU
+                <i class="fa-solid fa-dice"></i> FIND A GAME
             </button>
         </section>
     </div>
@@ -53,14 +72,14 @@
         <div class="modal-backdrop"></div>
         <div class="modal-card">
             <div class="modal-header">
-                <span>Sélection aléatoire</span>
+                <span>Random Selection</span>
                 <button id="closeModal">&times;</button>
             </div>
             <div class="game-reveal">
                 <div class="icon-box">
                     <i class="fa-solid fa-trophy"></i>
                 </div>
-                <h2 id="winnerText">Nom du Jeu</h2>
+                <h2 id="winnerText">Game Name</h2>
             </div>
             <div class="confetti-container">
                 <div class="confetti"></div>
@@ -70,7 +89,7 @@
                 <div class="confetti"></div>
                 <div class="confetti"></div>
             </div>
-            <button class="btn-restart" onclick="window.location.reload()">RECOMMENCER</button>
+            <button class="btn-restart" onclick="window.location.reload()">RESTART</button>
         </div>
     </div>
 
