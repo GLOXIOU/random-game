@@ -1,5 +1,7 @@
 # 🎮 Random Game
 
+**Project still in development**
+
 **Struggling to choose a game to play with your friends every night?**  
 Stop arguing, stop scrolling — let the randomness decide for you.
 
