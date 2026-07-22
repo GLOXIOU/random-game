@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Random Game Selector</title>
+    <title>Sélecteur de Jeu Aléatoire</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap" rel="stylesheet">
 </head>
-<body>
+<body data-theme="dark">
 
-    <div class="main-container">
+    <div class="main-wrapper" id="mainWrapper">
         <header>
             <div class="logo">RANDOM GAME</div>
-            <p>Compare your libraries and play together.</p>
+            <p>Comparez vos bibliothèques et jouez ensemble.</p>
         </header>
 
         <section class="input-section">
@@ -28,68 +28,72 @@
                             <i class="fa-brands fa-steam"></i> Steam
                         </div>
                         <div class="platform-item disabled">
-                            <i class="fa-brands fa-xbox"></i> Xbox (Soon)
+                            <i class="fa-brands fa-xbox"></i> Xbox (Bientôt)
                         </div>
                         <div class="platform-item disabled">
-                            <i class="fa-brands fa-playstation"></i> PlayStation (Soon)
+                            <i class="fa-brands fa-playstation"></i> PlayStation (Bientôt)
                         </div>
                         <div class="platform-item disabled">
-                            <i class="fa-solid fa-gamepad"></i> Epic Games (Soon)
+                            <i class="fa-solid fa-gamepad"></i> Epic Games (Bientôt)
                         </div>
                     </div>
                 </div>
-                <input type="text" id="usernameInput" placeholder="Steam Username..." autocomplete="off">
+                <input type="text" id="usernameInput" placeholder="Steam ID..." autocomplete="off">
+                <button id="themeToggle" class="theme-toggle-btn">
+                    <i class="fa-solid fa-sun"></i>
+                </button>
                 <button id="addUserBtn">OK</button>
             </div>
         </section>
 
-        <div id="usersContainer" class="users-grid"></div>
-
-        <section class="common-games-section">
-            <div class="section-header">
-                <h2><i class="fa-solid fa-layer-group"></i> Common Games</h2>
-                <span id="commonCount" class="badge">0</span>
-            </div>
-            
-            <div class="common-games-wrapper">
-                <div id="commonGamesList" class="games-list">
-                    <div class="empty-state">Add players to see common games...</div>
+        <div id="hiddenContent" class="hidden-content">
+            <section class="boxed-section">
+                <div class="section-header">
+                    <h2>Joueurs</h2>
                 </div>
-                <button id="addManualGameBtn" class="btn-dashed">
-                    <i class="fa-solid fa-plus"></i> Add External Game
-                </button>
-            </div>
-        </section>
+                <div id="usersContainer" class="users-grid"></div>
+            </section>
 
-        <section class="action-section">
+            <section class="boxed-section">
+                <div class="section-header">
+                    <h2>Jeux en commun</h2>
+                    <span id="commonCount" class="badge">0</span>
+                </div>
+                
+                <div class="common-games-wrapper">
+                    <div id="commonGamesList" class="games-list">
+                        <div class="empty-state">Ajoutez des joueurs pour voir les jeux en commun...</div>
+                    </div>
+                    <div class="manual-game-container">
+                        <button id="addManualGameBtn" class="btn-outline">
+                            <i class="fa-solid fa-plus"></i> Ajouter un jeu externe
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+        
+        <section id="actionSection" class="action-section hidden-action">
             <button id="randomizeBtn" class="btn-primary" disabled>
-                <i class="fa-solid fa-dice"></i> FIND A GAME
+                <i class="fa-solid fa-dice"></i> TROUVER UN JEU
             </button>
         </section>
     </div>
 
-    <div id="resultModal" class="modal">
+    <div id="resultModal" class="modal glass-modal">
         <div class="modal-backdrop"></div>
-        <div class="modal-card">
+        <div class="modal-card glass-card">
             <div class="modal-header">
-                <span>Random Selection</span>
+                <span>Sélection Aléatoire</span>
                 <button id="closeModal">&times;</button>
             </div>
             <div class="game-reveal">
                 <div class="icon-box">
-                    <i class="fa-solid fa-trophy"></i>
+                    <i class="fa-solid fa-crosshairs fa-spin"></i>
                 </div>
-                <h2 id="winnerText">Game Name</h2>
+                <h2 id="winnerText">...</h2>
             </div>
-            <div class="confetti-container">
-                <div class="confetti"></div>
-                <div class="confetti"></div>
-                <div class="confetti"></div>
-                <div class="confetti"></div>
-                <div class="confetti"></div>
-                <div class="confetti"></div>
-            </div>
-            <button class="btn-restart" onclick="window.location.reload()">RESTART</button>
+            <button class="btn-restart" onclick="window.location.reload()">RECOMMENCER</button>
         </div>
     </div>
 

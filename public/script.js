@@ -1,6 +1,9 @@
 let users = [];
 let commonGames = [];
+let hasStarted = false;
 
+const mainWrapper = document.getElementById('mainWrapper');
+const actionSection = document.getElementById('actionSection');
 const usernameInput = document.getElementById('usernameInput');
 const addUserBtn = document.getElementById('addUserBtn');
 const usersContainer = document.getElementById('usersContainer');
@@ -15,6 +18,14 @@ const currentPlatform = document.getElementById('currentPlatform');
 const platformMenu = document.getElementById('platformMenu');
 const errorModal = document.getElementById('errorModal');
 const closeErrorModal = document.getElementById('closeErrorModal');
+const themeToggle = document.getElementById('themeToggle');
+const modalIcon = document.querySelector('.icon-box i');
+
+themeToggle.addEventListener('click', () => {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    themeToggle.innerHTML = isDark ? '<i class="fa-solid fa-moon"></i>' : '<i class="fa-solid fa-sun"></i>';
+});
 
 currentPlatform.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -56,6 +67,12 @@ async function addUser(username) {
             throw new Error(data.error);
         }
 
+        if (!hasStarted) {
+            hasStarted = true;
+            mainWrapper.classList.add('active');
+            actionSection.classList.remove('hidden-action');
+        }
+
         const userAvatar = data.avatar || `https://api.dicebear.com/7.x/pixel-art/svg?seed=${data.username}`;
 
         users.push({
@@ -84,6 +101,12 @@ window.removeUser = function(id) {
     users = users.filter(u => u.id !== id);
     renderUsers();
     updateCommonGames();
+    
+    if (users.length === 0) {
+        hasStarted = false;
+        mainWrapper.classList.remove('active');
+        actionSection.classList.add('hidden-action');
+    }
 }
 
 window.removeCommonGame = function(gameToRemove) {
@@ -97,16 +120,13 @@ function renderUsers() {
         const card = document.createElement('div');
         card.className = 'user-card';
         
-        let gamesHtml = user.games.slice(0, 5).map(game => `<span class="game-tag">${game}</span>`).join('');
-        if(user.games.length > 5) gamesHtml += `<span class="game-tag">+${user.games.length - 5}</span>`;
-
         card.innerHTML = `
-            <button class="btn-remove-user" onclick="removeUser(${user.id})"><i class="fa-solid fa-xmark"></i></button>
-            <div class="user-header">
-                <img src="${user.avatar}" class="user-avatar" alt="avatar">
+            <img src="${user.avatar}" class="user-avatar" alt="avatar">
+            <div class="user-info">
                 <div class="user-name">${user.name}</div>
+                <div class="user-game-count">${user.games.length} jeux</div>
             </div>
-            <div class="user-games-list">${gamesHtml}</div>
+            <button class="btn-remove-user" onclick="removeUser(${user.id})"><i class="fa-solid fa-xmark"></i></button>
         `;
         usersContainer.appendChild(card);
     });
@@ -134,17 +154,14 @@ function renderCommonGames() {
             const chip = document.createElement('div');
             chip.className = 'common-game-chip';
             
-            const icon = document.createElement('i');
-            icon.className = 'fa-solid fa-gamepad';
-            
-            const textNode = document.createTextNode(' ' + game + ' ');
+            const textNode = document.createElement('span');
+            textNode.textContent = game;
 
             const removeBtn = document.createElement('button');
             removeBtn.className = 'btn-remove-common';
             removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
             removeBtn.onclick = () => removeCommonGame(game);
 
-            chip.appendChild(icon);
             chip.appendChild(textNode);
             chip.appendChild(removeBtn);
 
@@ -152,12 +169,12 @@ function renderCommonGames() {
         });
     } else {
         randomizeBtn.disabled = true;
-        commonGamesList.innerHTML = '<div class="empty-state">No common games...</div>';
+        commonGamesList.innerHTML = '<div class="empty-state">Ajoutez des joueurs pour voir les jeux en commun...</div>';
     }
 }
 
 addManualGameBtn.addEventListener('click', () => {
-    const manualGame = prompt("Name of the game to add:");
+    const manualGame = prompt("Nom du jeu à ajouter :");
     if (manualGame) {
         if (!commonGames.includes(manualGame)) {
             commonGames.push(manualGame);
@@ -168,25 +185,32 @@ addManualGameBtn.addEventListener('click', () => {
 });
 
 randomizeBtn.addEventListener('click', () => {
+    resultModal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    winnerText.classList.remove('winner-pop');
     randomizeBtn.disabled = true;
-    randomizeBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+    
+    modalIcon.className = 'fa-solid fa-crosshairs fa-spin';
+    modalIcon.style.color = 'var(--text-muted)';
 
-    setTimeout(() => {
-        const winner = commonGames[Math.floor(Math.random() * commonGames.length)];
-        winnerText.textContent = winner;
-        resultModal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+    const winner = commonGames[Math.floor(Math.random() * commonGames.length)];
+    const duration = 2500;
+    const intervalTime = 60;
+    let elapsed = 0;
+
+    const shuffle = setInterval(() => {
+        winnerText.textContent = commonGames[Math.floor(Math.random() * commonGames.length)];
+        elapsed += intervalTime;
         
-        const confettis = document.querySelectorAll('.confetti');
-        confettis.forEach(c => {
-            c.style.animation = 'none';
-            c.offsetHeight;
-            c.style.animation = 'fall 2.5s linear forwards';
-        });
-
-        randomizeBtn.disabled = false;
-        randomizeBtn.innerHTML = '<i class="fa-solid fa-dice"></i> FIND A GAME';
-    }, 1000);
+        if (elapsed >= duration) {
+            clearInterval(shuffle);
+            winnerText.textContent = winner;
+            winnerText.classList.add('winner-pop');
+            modalIcon.className = 'fa-solid fa-trophy';
+            modalIcon.style.color = 'var(--primary-green)';
+            randomizeBtn.disabled = false;
+        }
+    }, intervalTime);
 });
 
 closeModal.addEventListener('click', () => {
@@ -200,7 +224,7 @@ closeErrorModal.addEventListener('click', () => {
 });
 
 window.onclick = (e) => { 
-    if (e.target == resultModal) {
+    if (e.target == resultModal && !randomizeBtn.disabled) {
         resultModal.style.display = "none";
         document.body.style.overflow = '';
     }
