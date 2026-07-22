@@ -13,7 +13,7 @@
     <div class="main-wrapper" id="mainWrapper">
         <header>
             <div class="logo">RANDOM GAME</div>
-            <p>Comparez vos bibliothèques et jouez ensemble.</p>
+            <p>Compare your libraries and play together.</p>
         </header>
 
         <section class="input-section">
@@ -28,13 +28,13 @@
                             <i class="fa-brands fa-steam"></i> Steam
                         </div>
                         <div class="platform-item disabled">
-                            <i class="fa-brands fa-xbox"></i> Xbox (Bientôt)
+                            <i class="fa-brands fa-xbox"></i> Xbox (Soon)
                         </div>
                         <div class="platform-item disabled">
-                            <i class="fa-brands fa-playstation"></i> PlayStation (Bientôt)
+                            <i class="fa-brands fa-playstation"></i> PlayStation (Soon)
                         </div>
                         <div class="platform-item disabled">
-                            <i class="fa-solid fa-gamepad"></i> Epic Games (Bientôt)
+                            <i class="fa-solid fa-gamepad"></i> Epic Games (Soon)
                         </div>
                     </div>
                 </div>
@@ -49,24 +49,24 @@
         <div id="hiddenContent" class="hidden-content">
             <section class="boxed-section">
                 <div class="section-header">
-                    <h2>Joueurs</h2>
+                    <h2>Players</h2>
                 </div>
                 <div id="usersContainer" class="users-grid"></div>
             </section>
 
             <section class="boxed-section">
                 <div class="section-header">
-                    <h2>Jeux en commun</h2>
+                    <h2>Common Games</h2>
                     <span id="commonCount" class="badge">0</span>
                 </div>
                 
                 <div class="common-games-wrapper">
                     <div id="commonGamesList" class="games-list">
-                        <div class="empty-state">Ajoutez des joueurs pour voir les jeux en commun...</div>
+                        <div class="empty-state">Add players to see common games...</div>
                     </div>
                     <div class="manual-game-container">
                         <button id="addManualGameBtn" class="btn-outline">
-                            <i class="fa-solid fa-plus"></i> Ajouter un jeu externe
+                            <i class="fa-solid fa-plus"></i> Add custom game
                         </button>
                     </div>
                 </div>
@@ -75,7 +75,7 @@
         
         <section id="actionSection" class="action-section hidden-action">
             <button id="randomizeBtn" class="btn-primary" disabled>
-                <i class="fa-solid fa-dice"></i> TROUVER UN JEU
+                <i class="fa-solid fa-dice"></i> FIND A GAME
             </button>
         </section>
     </div>
@@ -84,7 +84,7 @@
         <div class="modal-backdrop"></div>
         <div class="modal-card glass-card">
             <div class="modal-header">
-                <span>Sélection Aléatoire</span>
+                <span>Random Selection</span>
                 <button id="closeModal">&times;</button>
             </div>
             <div class="game-reveal">
@@ -93,7 +93,33 @@
                 </div>
                 <h2 id="winnerText">...</h2>
             </div>
-            <button class="btn-restart" onclick="window.location.reload()">RECOMMENCER</button>
+            
+            <div id="multiWarningContainer" class="multi-warning-container" style="display: none;">
+                <div class="glass-warning-box">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <p>Ce jeu n'est pas répertorié comme multijoueur sur Steam !</p>
+                </div>
+            </div>
+
+            <div id="gameExtraInfo" class="game-extra-info" style="display: none;">
+                <div class="glass-tuto-box detailed-info-box">
+                    <h4>Informations du jeu :</h4>
+                    <p><strong>Type :</strong> <span id="infoType">-</span></p>
+                    <p><strong>Développeur :</strong> <span id="infoDeveloper">-</span></p>
+                    <p><strong>Éditeur :</strong> <span id="infoPublisher">-</span></p>
+                    <p><strong>Date de sortie :</strong> <span id="infoRelease">-</span></p>
+                    <p><strong>Prix :</strong> <span id="infoPrice">-</span></p>
+                    <p><strong>Genres :</strong> <span id="infoGenres">-</span></p>
+                    <p><strong>Catégories :</strong> <span id="infoCategories">-</span></p>
+                    <p><strong>Metacritic :</strong> <span id="infoMetacritic">-</span></p>
+                    <p><strong>Plateformes :</strong> <span id="infoPlatforms">-</span></p>
+                    <p><strong>Manette :</strong> <span id="infoController">-</span></p>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button id="rerollBtn" class="btn-restart" style="display: none;"><i class="fa-solid fa-rotate-right"></i> Relancer une recherche</button>
+            </div>
         </div>
     </div>
 
@@ -101,26 +127,26 @@
         <div class="modal-backdrop"></div>
         <div class="modal-card glass-card">
             <div class="modal-header">
-                <span>Erreur Steam</span>
+                <span>Steam Error</span>
                 <button id="closeErrorModal">&times;</button>
             </div>
             <div class="error-content">
                 <i class="fa-brands fa-steam error-icon"></i>
-                <h3>Steam ID Introuvable</h3>
-                <p>Assurez-vous d'utiliser votre <strong>Steam ID</strong> à 17 chiffres.</p>
+                <h3>Steam ID Not Found</h3>
+                <p>Make sure you use your 17-digit <strong>Steam ID</strong>.</p>
                 
                 <div class="glass-tuto-box">
-                    <h4>Comment trouver son Steam ID ?</h4>
+                    <h4>How to find your Steam ID?</h4>
                     <ol>
-                        <li>Ouvrez votre profil sur Steam</li>
-                        <li>Faites un clic droit > <strong>Copier l'URL de la page</strong></li>
-                        <li>Récupérez les 17 chiffres à la fin du lien</li>
+                        <li>Open your profile on Steam</li>
+                        <li>Right click > <strong>Copy Page URL</strong></li>
+                        <li>Extract the 17 digits at the end of the link</li>
                     </ol>
                 </div>
                 
                 <div class="glass-warning-box">
                     <i class="fa-solid fa-unlock"></i>
-                    <p>Votre profil et les détails de vos jeux doivent être définis sur <strong>Public</strong>.</p>
+                    <p>Your profile and game details must be set to <strong>Public</strong>.</p>
                 </div>
             </div>
         </div>

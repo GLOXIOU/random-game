@@ -5,7 +5,6 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.static(path.join(__dirname, 'public')));
 
 const STEAM_API_KEY = process.env.STEAM_API_KEY;
@@ -14,32 +13,25 @@ async function resolveSteamId(input) {
     if (/^\d{17}$/.test(input)) {
         return input;
     }
-
     const url = `https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=${STEAM_API_KEY}&vanityurl=${encodeURIComponent(input)}`;
     const response = await fetch(url);
     const data = await response.json();
-
     if (data.response && data.response.success === 1) {
         return data.response.steamid;
     }
-
     return null;
 }
 
 app.get('/api/games/:username', async (req, res) => {
     const { username } = req.params;
-
     if (!STEAM_API_KEY) {
         return res.status(500).json({ error: 'Server is missing the STEAM_API_KEY environment variable.' });
     }
-
     try {
         const steamId = await resolveSteamId(username);
-
         if (!steamId) {
             return res.status(404).json({ error: `Aucun profil Steam trouvé pour "${username}".` });
         }
-
         const summaryUrl = `https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=${STEAM_API_KEY}&steamids=${steamId}`;
         const summaryResponse = await fetch(summaryUrl);
         const summaryData = await summaryResponse.json();
@@ -77,10 +69,19 @@ app.get('/api/games/:username', async (req, res) => {
     }
 });
 
+app.get('/api/game-details/:appid', async (req, res) => {
+    try {
+        const response = await fetch(`https://store.steampowered.com/api/appdetails?appids=${req.params.appid}`);
+        const data = await response.json();
+        res.json(data);
+    } catch (err) {
+        res.status(500).json({ error: 'Échec de la récupération des détails du jeu.' });
+    }
+});
+
 app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-});
+app.listen(PORT, () => {});
