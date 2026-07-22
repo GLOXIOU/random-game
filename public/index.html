@@ -93,6 +93,35 @@
         </div>
     </div>
 
+    <div id="errorModal" class="modal glass-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-card glass-card">
+            <div class="modal-header">
+                <span>Erreur Steam</span>
+                <button id="closeErrorModal">&times;</button>
+            </div>
+            <div class="error-content">
+                <i class="fa-brands fa-steam error-icon"></i>
+                <h3>Steam ID Introuvable</h3>
+                <p>Assurez-vous d'utiliser votre <strong>Steam ID</strong> à 17 chiffres.</p>
+                
+                <div class="glass-tuto-box">
+                    <h4>Comment trouver son Steam ID ?</h4>
+                    <ol>
+                        <li>Ouvrez votre profil sur Steam</li>
+                        <li>Faites un clic droit > <strong>Copier l'URL de la page</strong></li>
+                        <li>Récupérez les 17 chiffres à la fin du lien</li>
+                    </ol>
+                </div>
+                
+                <div class="glass-warning-box">
+                    <i class="fa-solid fa-unlock"></i>
+                    <p>Votre profil et les détails de vos jeux doivent être définis sur <strong>Public</strong>.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

@@ -31,7 +31,8 @@ Stop arguing, stop scrolling — let the randomness decide for you.
 2. Create a .env file:
 
     ```bash
-    STEAM_API_KEY=your_steam_api_key_here
+    STEAM_API_KEY="your_steam_api_key_here"
+    PORT=3000
     ```
 
 2. Install dependencies:

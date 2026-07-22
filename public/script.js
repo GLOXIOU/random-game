@@ -1,10 +1,3 @@
-const possibleGames = [
-    "Counter-Strike 2", "Elden Ring", "Cyberpunk 2077", "Among Us", 
-    "Minecraft", "Rocket League", "GTA V", "Valheim", "Terraria", 
-    "Apex Legends", "Stardew Valley", "Baldur's Gate 3", "Left 4 Dead 2",
-    "Rust", "Helldivers 2", "Overwatch 2", "Phasmophobia", "The Forest"
-];
-
 let users = [];
 let commonGames = [];
 
@@ -20,6 +13,8 @@ const winnerText = document.getElementById('winnerText');
 const closeModal = document.getElementById('closeModal');
 const currentPlatform = document.getElementById('currentPlatform');
 const platformMenu = document.getElementById('platformMenu');
+const errorModal = document.getElementById('errorModal');
+const closeErrorModal = document.getElementById('closeErrorModal');
 
 currentPlatform.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -36,8 +31,6 @@ addUserBtn.addEventListener('click', () => {
     const username = usernameInput.value.trim();
     if (username) {
         addUser(username);
-        usernameInput.value = '';
-        usernameInput.focus();
     }
 });
 
@@ -45,20 +38,46 @@ usernameInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') addUserBtn.click();
 });
 
-function addUser(username) {
-    const id = Date.now();
-    const userGames = generateRandomGames();
-    const userAvatar = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${username}`;
-    
-    users.push({
-        id: id,
-        name: username,
-        games: userGames,
-        avatar: userAvatar
-    });
+async function addUser(username) {
+    if (users.some(u => u.originalInput.toLowerCase() === username.toLowerCase())) {
+        return;
+    }
 
-    renderUsers();
-    updateCommonGames();
+    addUserBtn.disabled = true;
+    usernameInput.disabled = true;
+    const originalBtnHtml = addUserBtn.innerHTML;
+    addUserBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i>';
+
+    try {
+        const response = await fetch(`/api/games/${encodeURIComponent(username)}`);
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.error);
+        }
+
+        const userAvatar = data.avatar || `https://api.dicebear.com/7.x/pixel-art/svg?seed=${data.username}`;
+
+        users.push({
+            id: Date.now(),
+            originalInput: username,
+            name: data.username,
+            games: data.games.map(g => g.name),
+            avatar: userAvatar
+        });
+
+        usernameInput.value = '';
+        renderUsers();
+        updateCommonGames();
+    } catch (err) {
+        errorModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    } finally {
+        addUserBtn.disabled = false;
+        usernameInput.disabled = false;
+        addUserBtn.innerHTML = originalBtnHtml;
+        usernameInput.focus();
+    }
 }
 
 window.removeUser = function(id) {
@@ -70,13 +89,6 @@ window.removeUser = function(id) {
 window.removeCommonGame = function(gameToRemove) {
     commonGames = commonGames.filter(game => game !== gameToRemove);
     renderCommonGames();
-}
-
-function generateRandomGames() {
-    const shuffled = [...possibleGames].sort(() => 0.5 - Math.random());
-    const count = Math.floor(Math.random() * 6) + 5; 
-    const baseCommon = ["Minecraft", "Counter-Strike 2"];
-    return Array.from(new Set([...baseCommon, ...shuffled.slice(0, count)]));
 }
 
 function renderUsers() {
@@ -163,6 +175,7 @@ randomizeBtn.addEventListener('click', () => {
         const winner = commonGames[Math.floor(Math.random() * commonGames.length)];
         winnerText.textContent = winner;
         resultModal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
         
         const confettis = document.querySelectorAll('.confetti');
         confettis.forEach(c => {
@@ -176,5 +189,23 @@ randomizeBtn.addEventListener('click', () => {
     }, 1000);
 });
 
-closeModal.addEventListener('click', () => resultModal.style.display = 'none');
-window.onclick = (e) => { if (e.target == resultModal) resultModal.style.display = "none"; };
+closeModal.addEventListener('click', () => {
+    resultModal.style.display = 'none';
+    document.body.style.overflow = '';
+});
+
+closeErrorModal.addEventListener('click', () => {
+    errorModal.style.display = 'none';
+    document.body.style.overflow = '';
+});
+
+window.onclick = (e) => { 
+    if (e.target == resultModal) {
+        resultModal.style.display = "none";
+        document.body.style.overflow = '';
+    }
+    if (e.target == errorModal) {
+        errorModal.style.display = "none";
+        document.body.style.overflow = '';
+    }
+};
